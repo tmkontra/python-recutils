@@ -1,5 +1,5 @@
 from . import parse
-import pdb
+
 
 class Insert:
     def __init__(self, db):

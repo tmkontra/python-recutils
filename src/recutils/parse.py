@@ -140,9 +140,9 @@ class BaseParser:
         
     
 class FileParser(BaseParser):
-    def __init__(self, filename):
+    def __init__(self, filepath):
         super().__init__()
-        self._filename = filename
+        self._filename = filepath
         self._file = None
         
     @property
