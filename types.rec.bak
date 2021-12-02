@@ -1,0 +1,9 @@
+%rec: Item
+%type: Id int
+%mandatory: Title
+
+Id: 10
+Title: Notebook (big)
+
+Id: 11
+Title: Fountain Pen

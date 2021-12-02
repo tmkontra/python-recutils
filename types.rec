@@ -1,0 +1,12 @@
+Id: 101
+
+%rec: Item
+%mandatory: Title
+%type: Id int
+
+Id: 10
+Title: Notebook (big)
+
+Id: 11
+Title: Fountain Pen
+
