@@ -46,7 +46,7 @@ class BaseParser:
             if typ not in self._records:
                 self._next_desc = RecordDescriptor(typ)
             else:
-                raise RecfileSyntaxError("Got record type {} twice".format(typ))
+                raise RecfileSyntaxError("Got record type {} twice".format(typ), self._line_no)
         elif not line:
             if self._next_desc:
                 self._desc = self._next_desc
@@ -62,15 +62,14 @@ class BaseParser:
                 try:
                     self._next_fields.append(Field(key.strip(), val.strip()))
                 except ValueError as e:
-                    raise RecfileSyntaxError(str(e))
+                    raise RecfileSyntaxError(str(e), self._line_no)
         self._line_no += 1
     
     def _flush_record(self):
         try:
             self._records[self._desc].append(Record(self._next_fields, descriptor=self._desc))
         except ValueError as e:
-            msg = str(e) + " at line {}".format(self._line_no)
-            raise RecfileSyntaxError(msg)
+            raise RecfileSyntaxError(str(e), self._line_no)
         self._next_fields = []
         
     def advance(self):

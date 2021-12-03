@@ -1,4 +1,7 @@
 import itertools
+from typing import Mapping
+
+from recutils.parse.descriptor import RecordDescriptor
 
 
 class RecDb:
@@ -16,13 +19,17 @@ class RecDb:
     @property
     def types(self):
         return [t for t in self._records.keys() if t is not None]
+
+    @property
+    def multiple_types(self) -> bool:
+        return len(self._records.keys()) > 1
     
     @property
     def types_seen(self):
         return [t.name for t in self.types]
     
     @property
-    def types_by_name(self):
+    def types_by_name(self) -> Mapping[str, RecordDescriptor]:
         return {t.name: t for t in self.types}
         
     def has_type(self, type_name):

@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 pytest = "*"
 recutils = {editable = true, path = "."}
+click = "*"
 
 [dev-packages]
 
