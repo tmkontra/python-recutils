@@ -1,0 +1,3 @@
+
+class RecfileSyntaxError(Exception):
+    pass
