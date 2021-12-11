@@ -1,4 +1,6 @@
 import enum
+import random
+
 from . import parse
 from .db import RecDb
 
@@ -20,29 +22,49 @@ class Select:
         self._typ = typ
         self._sexes = sexes or []
         self._indexes = indexes
+        self._random = random
+        self._random_indices = None
         self._include_descriptors = include_descriptors
         self._record_separator = "" if collapse else "\n"
+        self._records = None
         
     @property
     def by_type(self):
         return self._typ
+
+    def random_indices(self, count):
+        if self._random == 0:
+            return [i for i in range(count)]
+        else:
+            population = [i for i in range(count)]
+            choices = random.sample(population, k=self._random)
+            return choices
         
     @property
     def records(self):
+        if self._records is not None:
+            return self._records
         if self._typ:
             recs = self._db.of_type(self._typ)
         else:
             recs = self._db.all_records
-        filters = []
-        filters.extend(self._sexes)
-        for filtr in filters:
-            recs = filter(filtr, recs)
+        if self._random is not None:
+            indices = self.random_indices(len(recs))
+            recs = [
+                r for i,r in enumerate(recs) if i in indices
+            ]
+        else: # random and SEXPRS are mutually exclusive
+            filters = []
+            filters.extend(self._sexes)
+            for filtr in filters:
+                recs = filter(filtr, recs)
         if self._indexes:
-            return [
+            self._records = [
                 r for i, r in enumerate(recs) if i in self._indexes
             ]
         else:
-            return list(recs)
+            self._records = list(recs)
+        return self._records
     
     @property
     def stdout(self):
@@ -52,6 +74,7 @@ class Select:
                 yield  "\n"
             yield "\n"
         records = self.records
+        print("has", len(records), "records")
         for record in records[:-1]:
             for field in record:
                 yield field.stdout

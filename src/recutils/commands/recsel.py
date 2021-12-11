@@ -15,9 +15,9 @@ from ..parse import FileParser
 @click.option("-n", "--number") # YES
 @click.option("-e", "--expression", multiple=True) # no
 @click.option("-q", "--quick") # no
-@click.option("-m", "--random") # no
-@click.option("-t", "--type") # no
-@click.option("-j", "--field") # no
+@click.option("-m", "--random", type=int) # yes
+@click.option("-t", "--type") # yes
+@click.option("-j", "--field") # WIP
 # output options
 @click.option("-p", "--print") # no
 @click.option("-P", "--print-value") # no
@@ -32,6 +32,7 @@ def recsel(recfile, **kwargs):
     expressions = kwargs.pop("expression")
     random = kwargs.pop("random")
     typ = kwargs.pop("type")
+    fieled = kwargs.pop("field") # WIP!
     if expressions and indexes:
         raise ArgumentError("cannot specify -n and also -e")
     if random and indexes:
@@ -39,6 +40,11 @@ def recsel(recfile, **kwargs):
     include_descriptors = kwargs.pop("include_descriptors")
     collapse = kwargs.pop("collapse")
     db = FileParser(recfile).get_db()
-    select = Select(db, indexes=indexes, typ=typ, include_descriptors=include_descriptors, collapse=collapse)
+    select = Select(db, 
+        indexes=indexes, typ=typ, 
+        include_descriptors=include_descriptors, 
+        collapse=collapse,
+        random=random
+        )
     for line in select.stdout:
         print(line, end="")
