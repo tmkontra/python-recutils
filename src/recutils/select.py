@@ -12,18 +12,17 @@ class SelectionError(Exception):
 class Select:
     def __init__(self, db: RecDb, 
         typ=None, sexes=None, 
-        indexes=None, random=None, 
+        indexes=None, random: int = None, 
         include_descriptors=False,
         collapse=False
     ):
         if db.multiple_types and typ is None:
-            raise ValueError("several record types found! please specify a type.")
+            raise ValueError("several record types found.  Please use -t to specify one")
         self._db = db
         self._typ = typ
         self._sexes = sexes or []
         self._indexes = indexes
         self._random = random
-        self._random_indices = None
         self._include_descriptors = include_descriptors
         self._record_separator = "" if collapse else "\n"
         self._records = None
@@ -69,12 +68,12 @@ class Select:
     @property
     def stdout(self):
         if self._include_descriptors:
-            for line in self._db.types_by_name[self._typ].lines:
-                yield line
-                yield  "\n"
-            yield "\n"
+            if self._typ:
+                for line in self._db.types_by_name[self._typ].lines:
+                    yield line
+                    yield  "\n"
+                yield "\n"
         records = self.records
-        print("has", len(records), "records")
         for record in records[:-1]:
             for field in record:
                 yield field.stdout

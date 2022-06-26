@@ -14,7 +14,7 @@ class RecDb:
         
     @property
     def all_records(self):
-        return itertools.chain.from_iterable(self._records.values())
+        return list(itertools.chain.from_iterable(self._records.values()))
         
     @property
     def types(self):
