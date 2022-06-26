@@ -21,9 +21,11 @@ def test_invalid_parse():
 
 def test_parse_type():
     fn = "single_type.rec"
-    record_count = 2
+    record_count = 3
     records = list(_parser(fn).get_db().all_records)
     assert len(records) == record_count
+    type_records = list(_parser(fn).get_db().of_type("Item"))
+    assert len(type_records) == 2
 
 def test_parse_anonymous_with_type():
     fn = "anonymous_type.rec"
